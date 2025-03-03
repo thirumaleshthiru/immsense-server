@@ -1,0 +1,50 @@
+students
+
+student_id
+student_name
+student_branch enum (cse,ece,mech,cse ai, cse ds,eee,civil,mca,mba)
+student_year enum (1,2,3,4)
+student_section enum (A,B,C) 
+student_rollno
+password
+type ('student")
+
+teachers
+
+teacher_id
+teacher_name
+teacher_role
+password
+type("teacher")
+
+
+
+recorded class
+
+class_id
+class_name
+class_description
+class_start_date
+class_end_date
+class_video_url
+class_by (teacher_id)
+class_for_branch enum (cse,ece,mech,cse ai, cse ds,eee,civil,mca,mba)
+class_for_year enum (1,2,3,4)
+class_for_section enum (A,B,C)
+
+
+attendence
+
+class_id
+student_id
+is_present default false 
+
+
+class_notes
+
+note_id
+related_class (class_id)
+note_by (teacher_id)
+notes_name
+notes_description
+notes_url

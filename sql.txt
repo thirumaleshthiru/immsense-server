@@ -1,0 +1,55 @@
+CREATE TABLE students (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    email varchar(255),
+    student_name VARCHAR(255) NOT NULL,
+    student_branch ENUM('cse', 'ece', 'mech', 'cse ai', 'cse ds', 'eee', 'civil', 'mca', 'mba') NOT NULL,
+    student_year ENUM('1', '2', '3', '4') NOT NULL,
+    student_section ENUM('A', 'B', 'C') NOT NULL,
+    student_rollno VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    type ENUM('student') NOT NULL DEFAULT 'student'
+);
+
+CREATE TABLE teachers (
+    teacher_id INT PRIMARY KEY AUTO_INCREMENT,
+    email varchar(255),
+
+    teacher_name VARCHAR(255) NOT NULL,
+    teacher_role VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    type ENUM('teacher') NOT NULL DEFAULT 'teacher'
+);
+
+CREATE TABLE recorded_classes (
+    class_id INT PRIMARY KEY AUTO_INCREMENT,
+    class_name VARCHAR(255) NOT NULL,
+    class_description TEXT,
+    class_start_date DATETIME NOT NULL,
+    class_end_date DATETIME NOT NULL,
+    class_video_url VARCHAR(500) NOT NULL,
+    class_by INT NOT NULL,
+    class_for_branch ENUM('cse', 'ece', 'mech', 'cse ai', 'cse ds', 'eee', 'civil', 'mca', 'mba') NOT NULL,
+    class_for_year ENUM('1', '2', '3', '4') NOT NULL,
+    class_for_section ENUM('A', 'B', 'C') NOT NULL,
+    FOREIGN KEY (class_by) REFERENCES teachers(teacher_id) ON DELETE CASCADE
+);
+
+CREATE TABLE attendance (
+    class_id INT NOT NULL,
+    student_id INT NOT NULL,
+    is_present BOOLEAN DEFAULT FALSE,
+    PRIMARY KEY (class_id, student_id),
+    FOREIGN KEY (class_id) REFERENCES recorded_classes(class_id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE
+);
+
+CREATE TABLE class_notes (
+    note_id INT PRIMARY KEY AUTO_INCREMENT,
+    related_class INT NOT NULL,
+    note_by INT NOT NULL,
+    notes_name VARCHAR(255) NOT NULL,
+    notes_description TEXT,
+    notes_url VARCHAR(500) NOT NULL,
+    FOREIGN KEY (related_class) REFERENCES recorded_classes(class_id) ON DELETE CASCADE,
+    FOREIGN KEY (note_by) REFERENCES teachers(teacher_id) ON DELETE CASCADE
+);
