@@ -25,7 +25,7 @@ const createClass = async (req, res) => {
         const class_id = result.insertId; // Get the ID of the newly created class
 
         // Generate the class link
-        const classLink = `https://candid-genie-771a16.netlify.app/class/${class_id}`;
+        const classLink = `https://candid-genie-771a16.netlify.app/liveclass`;
 
         // Fetch students' emails
         const [students] = await pool.query(
