@@ -17,10 +17,15 @@ const createClass = async (req, res) => {
         const class_video_url = req.file ? `/uploads/${req.file.filename}` : null;
 
         // Insert the new class into recorded_classes
-        await pool.query(
+        const [result] = await pool.query(
             'INSERT INTO recorded_classes (class_name, class_description, class_start_date, class_end_date, class_video_url, class_by, class_for_branch, class_for_year, class_for_section) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [class_name, class_description, class_start_date, class_end_date, class_video_url, class_by, class_for_branch, class_for_year, class_for_section]
         );
+
+        const class_id = result.insertId; // Get the ID of the newly created class
+
+        // Generate the class link
+        const classLink = `https://candid-genie-771a16.netlify.app/class/${class_id}`;
 
         // Fetch students' emails
         const [students] = await pool.query(
@@ -36,7 +41,7 @@ const createClass = async (req, res) => {
                 from: 'thirumalesh579@zohomail.in',
                 to: studentEmails,
                 subject: `New Class Available: ${class_name}`,
-                text: `The class "${class_name}" is ready. Login with your credentials and mark your attendance.`
+                text: `The class "${class_name}" is ready. You can access it at the following link: ${classLink}. Login with your credentials and mark your attendance.`
             };
 
             await transporter.sendMail(mailOptions);
@@ -47,6 +52,7 @@ const createClass = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 const deleteClass = async (req, res) => {
     try {
